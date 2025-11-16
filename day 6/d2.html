@@ -1,20 +1,290 @@
- <!DOCTYPE html>
- <html lang="en">
- <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
- </head>
- <link rel="stylesheet" href="d2.css">
- <body>
-    <div>
-        
-        Hello
-    </div >
-    <div class="box">
-      bye
+ <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Course Cards — CSS Grid</title>
+  <style>
+    :root{
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --muted: #667085;
+      --accent: #ff6b4a;
+      --accent-2: #f97373;
+      --radius: 14px;
+      --shadow: 0 8px 24px rgba(22, 28, 36, 0.08);
+      --gap: 28px;
+      --pad: 22px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color-scheme: light;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .wrap{
+      max-width:1200px;
+      margin:36px auto;
+      padding: 20px;
+    }
+
+    /* Grid container */
+    .grid {
+      display: grid;
+      gap: var(--gap);
+      /* responsive columns: automatically fit as many 260px cards as possible */
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      align-items: start;
+    }
+
+    /* Card */
+    .card{
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: var(--pad);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(15, 23, 42, 0.04);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 200px;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(22,28,36,0.12);
+    }
+
+    /* Highlight / accent card */
+    .card--accent{
+      background: linear-gradient(180deg, #fff6f4 0%, #fff0ee 100%);
+      border-color: rgba(255,107,74,0.12);
+    }
+
+    .card__badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background: rgba(255,107,74,0.12);
+      color: var(--accent);
+    }
+    .card--accent .card__badge{
+      background: var(--accent);
+      color: white;
+    }
+
+    .card h3{
+      margin: 8px 0 8px 0;
+      font-size: 16px;
+      line-height: 1.25;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .card .provider{
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .meta{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .meta span::before{
+      content: "•";
+      margin-right:8px;
+      opacity: .45;
+    }
+
+    .card p.description{
+      margin: 0 0 14px 0;
+      color: #344054;
+      font-size: 14px;
+      line-height: 1.4;
+      flex: 1 1 auto; /* allow description to take space */
+    }
+
+    .card__cta{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      margin-top: 12px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor:pointer;
+      border: 0;
+    }
+
+    .btn--primary{
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 6px 18px rgba(255,107,74,0.15);
+    }
+
+    .btn--outline{
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(255,107,74,0.14);
+    }
+
+    /* Secondary action as subtle button */
+    .btn--subtle{
+      background: transparent;
+      color: #0f172a;
+      border: 1px solid rgba(15,23,42,0.06);
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    /* small helper */
+    .qualifier{
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px dashed rgba(15,23,42,0.04);
+      display:inline-block;
+      margin-top: 6px;
+    }
+
+    /* Small responsive tweaks */
+    @media (max-width:420px){
+      .wrap{ padding: 12px; }
+      .card{ padding: 16px; }
+      .card h3{ font-size:15px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" aria-label="Available programs">
+    <div class="grid">
+
+      <!-- Card 1 -->
+      <article class="card" aria-labelledby="c1-title">
+        <div class="provider">IIM Sirmaur</div>
+        <h3 id="c1-title">EDGE: Essentials of Data Analytics, Gen AI & Execution</h3>
+        <div class="meta">
+          <span>06 months</span>
+          <span>Online</span>
+        </div>
+        <p class="description">A short overview line about what this course covers — analytics fundamentals, generative AI workflows and execution strategies.</p>
+        <div class="qualifier">Qualifier test - 12th Nov 2025</div>
+        <div class="card__cta" style="margin-top:10px;">
+          <button class="btn btn--primary" type="button">Learn more →</button>
+          <button class="btn btn--subtle" type="button">Brochure</button>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="card" aria-labelledby="c2-title">
+        <div class="provider">Vishlesan | i-Hub IIT Patna</div>
+        <h3 id="c2-title">Product Management and Agentic AI</h3>
+        <div class="meta">
+          <span>06 months</span>
+          <span>Online</span>
+        </div>
+        <p class="description">Learn product strategy, agentic AI integration, and go-to-market frameworks for AI-first products.</p>
+        <div class="qualifier">Qualifier test - 12th Nov 2025</div>
+        <div class="card__cta">
+          <button class="btn btn--primary" type="button">Learn more →</button>
+          <button class="btn btn--subtle" type="button">Brochure</button>
+        </div>
+      </article>
+
+      <!-- Card 3 (accent/highlighted) -->
+      <article class="card card--accent" aria-labelledby="c3-title">
+        <div class="card__badge">Featured</div>
+        <div class="provider">Vishlesan | i-Hub IIT Patna</div>
+        <h3 id="c3-title">Certification Program in Data Analytics with Gen & Agentic AI</h3>
+        <div class="meta">
+          <span>06 months</span>
+          <span>Online</span>
+        </div>
+        <p class="description">In-depth certification combining modern analytics with generative and agentic AI capabilities for practitioners.</p>
+        <div class="qualifier">Qualifier test - 9th Nov 2025</div>
+        <div class="card__cta">
+          <button class="btn btn--primary" type="button">Learn more →</button>
+          <button class="btn btn--outline" type="button">Brochure</button>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="card" aria-labelledby="c4-title">
+        <div class="provider">IIM Trichy</div>
+        <h3 id="c4-title">Product Management in the Agentic AI Era</h3>
+        <div class="meta">
+          <span>06 months</span>
+          <span>Online</span>
+        </div>
+        <p class="description">Practical product management curriculum focused on AI-driven user experiences and agentic automation.</p>
+        <div class="qualifier">Qualifier test - 12th Nov 2025</div>
+        <div class="card__cta">
+          <button class="btn btn--primary" type="button">Learn more →</button>
+          <button class="btn btn--subtle" type="button">Brochure</button>
+        </div>
+      </article>
+
+      <!-- Card 5 -->
+      <article class="card" aria-labelledby="c5-title">
+        <div class="provider">IHUB DivyaSampak, IIT Roorkee</div>
+        <h3 id="c5-title">Future-Ready Product Management with Applied AI</h3>
+        <div class="meta">
+          <span>06 months</span>
+          <span>Online</span>
+        </div>
+        <p class="description">Build product roadmaps and AI adoption plans using applied machine learning and agentic systems.</p>
+        <div class="qualifier">Qualifier test - 12th Nov 2025</div>
+        <div class="card__cta">
+          <button class="btn btn--primary" type="button">Learn more →</button>
+          <button class="btn btn--subtle" type="button">Brochure</button>
+        </div>
+      </article>
+
+      <!-- Card 6 -->
+      <article class="card" aria-labelledby="c6-title">
+        <div class="provider">NMIMS CDOE</div>
+        <h3 id="c6-title">Online MBA</h3>
+        <div class="meta">
+          <span>02 Years</span>
+          <span>Online</span>
+        </div>
+        <p class="description">A flexible online MBA designed for working professionals with optional specializations.</p>
+        <div class="qualifier">Qualifier test - 12th Nov 2025</div>
+        <div class="card__cta">
+          <button class="btn btn--primary" type="button">Learn more →</button>
+          <button class="btn btn--subtle" type="button">Brochure</button>
+        </div>
+      </article>
 
     </div>
-    
- </body>
- </html>
+  </main>
+</body>
+</html>
